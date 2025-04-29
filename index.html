@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Enakutsa Kokou Espoir</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- EmailJS CDN -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #e2e8f0;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Parallax Effect (désactivé sur mobile pour performances) */
+        .parallax-section {
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        @media (max-width: 768px) {
+            .parallax-section {
+                background-attachment: scroll; /* Évite les problèmes de parallaxe sur mobile */
+            }
+        }
+
+        /* Animation pour les cercles de progression */
+        .skill-circle {
+            stroke-dasharray: 472;
+            stroke-dashoffset: 472;
+            animation: fillCircle 2s ease forwards;
+            filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8));
+        }
+
+        @keyframes fillCircle {
+            to { stroke-dashoffset: var(--offset); }
+        }
+
+        /* Animation pour les cartes de projet avec glow */
+        .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.5);
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+        }
+
+        /* Animation d'entrée pour la photo */
+        .photo-zoom {
+            opacity: 0;
+            transform: scale(0.8);
+            animation: zoomIn 1s ease forwards;
+            border: 3px solid #3b82f6;
+        }
+
+        @keyframes zoomIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Animation pour le texte dactylographié */
+        .typing-text::after {
+            content: "|";
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Animation pour les cercles au survol */
+        .skill-container {
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .skill-container:hover {
+            transform: scale(1.1);
+        }
+
+        .skill-container:hover .skill-circle {
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 1));
+        }
+
+        /* Particules au survol */
+        .skill-container:hover::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+            animation: particlePulse 1.5s infinite;
+        }
+
+        @keyframes particlePulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 0.2; }
+            100% { transform: scale(1); opacity: 0.5; }
+        }
+
+        /* Glow effect pour les inputs et boutons */
+        .glow-input, .glow-button {
+            transition: all 0.3s ease;
+        }
+
+        .glow-input:focus, .glow-button:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+            border-color: #3b82f6;
+        }
+
+        /* Footer stylisé */
+        footer {
+            background: #1e293b;
+            border-top: 1px solid #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="min-h-screen flex items-center justify-center text-center parallax-section" style="background-image: url('https://source.unsplash.com/1600x900/?technology,blue')">
+        <div class="flex flex-col items-center">
+            <!-- Espace pour ta photo (ronde avec bordure) -->
+            <div class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full bg-gray-700 flex items-center justify-center mb-8 sm:mb-12 photo-zoom">
+                <img src="image/espo.jpeg" alt="Description de la photo" class="w-full h-full rounded-full object-cover">
+              </div>
+            <!-- Nom avec animation dactylographiée -->
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4">
+                <span class="typing-text" id="typing-name"></span>
+            </h1>
+            <p class="text-lg sm:text-xl md:text-2xl">Développeur Web | Innovateur Technologique</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-900 bg-opacity-90 py-4 sticky top-0 z-50">
+        <ul class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 md:space-x-8">
+            <li><a href="#skills" class="hover:text-blue-400 transition-colors text-base sm:text-lg">Compétences</a></li>
+            <li><a href="#projects" class="hover:text-blue-400 transition-colors text-base sm:text-lg">Projets</a></li>
+            <li><a href="#contact" class="hover:text-blue-400 transition-colors text-base sm:text-lg">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Skills Section with Animated Circles -->
+    <section id="skills" class="py-12 sm:py-16 md:py-20">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-12 sm:mb-16 text-blue-400">Mes Compétences</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
+                <!-- HTML & CSS (100%) -->
+                <div class="skill-container flex flex-col items-center">
+                    <p class="text-base sm:text-lg mb-4">HTML & CSS</p>
+                    <svg width="120" height="120" class="sm:w-[150px] sm:h-[150px]" viewBox="0 0 150 150">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#1e293b" stroke-width="10"/>
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#3b82f6" stroke-width="10" class="skill-circle" style="--offset: 0;"/>
+                        <text x="75" y="85" fill="#e2e8f0" text-anchor="middle" font-size="24">100%</text>
+                    </svg>
+                    <p class="mt-4 text-center text-sm sm:text-base">Maîtrise des bases pour des interfaces soignées.</p>
+                </div>
+                <!-- JavaScript (70%) -->
+                <div class="skill-container flex flex-col items-center">
+                    <p class="text-base sm:text-lg mb-4">JavaScript</p>
+                    <svg width="120" height="120" class="sm:w-[150px] sm:h-[150px]" viewBox="0 0 150 150">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#1e293b" stroke-width="10"/>
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#facc15" stroke-width="10" class="skill-circle" style="--offset: 141.6;"/>
+                        <text x="75" y="85" fill="#e2e8f0" text-anchor="middle" font-size="24">70%</text>
+                    </svg>
+                    <p class="mt-4 text-center text-sm sm:text-base">En apprentissage pour dynamiser mes sites.</p>
+                </div>
+                <!-- PHP (100%) -->
+                <div class="skill-container flex flex-col items-center">
+                    <p class="text-base sm:text-lg mb-4">PHP</p>
+                    <svg width="120" height="120" class="sm:w-[150px] sm:h-[150px]" viewBox="0 0 150 150">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#1e293b" stroke-width="10"/>
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#8b5cf6" stroke-width="10" class="skill-circle" style="--offset: 0;"/>
+                        <text x="75" y="85" fill="#e2e8f0" text-anchor="middle" font-size="24">100%</text>
+                    </svg>
+                    <p class="mt-4 text-center text-sm sm:text-base">Back-end avec connexion à une base de données.</p>
+                </div>
+                <!-- MySQL & PostgreSQL (100%) -->
+                <div class="skill-container flex flex-col items-center">
+                    <p class="text-base sm:text-lg mb-4">MySQL & PostgreSQL</p>
+                    <svg width="120" height="120" class="sm:w-[150px] sm:h-[150px]" viewBox="0 0 150 150">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#1e293b" stroke-width="10"/>
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#10b981" stroke-width="10" class="skill-circle" style="--offset: 0;"/>
+                        <text x="75" y="85" fill="#e2e8f0" text-anchor="middle" font-size="24">100%</text>
+                    </svg>
+                    <p class="mt-4 text-center text-sm sm:text-base">Manipulation des bases de données relationnelles.</p>
+                </div>
+                <!-- Python (60%) -->
+                <div class="skill-container flex flex-col items-center">
+                    <p class="text-base sm:text-lg mb-4">Python</p>
+                    <svg width="120" height="120" class="sm:w-[150px] sm:h-[150px]" viewBox="0 0 150 150">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#1e293b" stroke-width="10"/>
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#f97316" stroke-width="10" class="skill-circle" style="--offset: 188.8;"/>
+                        <text x="75" y="85" fill="#e2e8f0" text-anchor="middle" font-size="24">60%</text>
+                    </svg>
+                    <p class="mt-4 text-center text-sm sm:text-base">Bases acquises, apprentissage de Django en cours.</p>
+                </div>
+                <!-- Java (50%) -->
+                <div class="skill-container flex flex-col items-center">
+                    <p class="text-base sm:text-lg mb-4">Java</p>
+                    <svg width="120" height="120" class="sm:w-[150px] sm:h-[150px]" viewBox="0 0 150 150">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#1e293b" stroke-width="10"/>
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#ef4444" stroke-width="10" class="skill-circle" style="--offset: 236;"/>
+                        <text x="75" y="85" fill="#e2e8f0" text-anchor="middle" font-size="24">50%</text>
+                    </svg>
+                    <p class="mt-4 text-center text-sm sm:text-base">Premiers projets réalisés.</p>
+                </div>
+                <!-- Tailwind CSS (100%) -->
+                <div class="skill-container flex flex-col items-center">
+                    <p class="text-base sm:text-lg mb-4">Tailwind CSS</p>
+                    <svg width="120" height="120" class="sm:w-[150px] sm:h-[150px]" viewBox="0 0 150 150">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#1e293b" stroke-width="10"/>
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#38bdf8" stroke-width="10" class="skill-circle" style="--offset: 0;"/>
+                        <text x="75" y="85" fill="#e2e8f0" text-anchor="middle" font-size="24">100%</text>
+                    </svg>
+                    <p class="mt-4 text-center text-sm sm:text-base">Stylisation moderne et rapide.</p>
+                </div>
+                <!-- React (50%) -->
+                <div class="skill-container flex flex-col items-center">
+                    <p class="text-base sm:text-lg mb-4">React</p>
+                    <svg width="120" height="120" class="sm:w-[150px] sm:h-[150px]" viewBox="0 0 150 150">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#1e293b" stroke-width="10"/>
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#61dafb" stroke-width="10" class="skill-circle" style="--offset: 236;"/>
+                        <text x="75" y="85" fill="#e2e8f0" text-anchor="middle" font-size="24">50%</text>
+                    </svg>
+                    <p class="mt-4 text-center text-sm sm:text-base">Développement d’interfaces dynamiques.</p>
+                </div>
+                <!-- Node.js (50%) -->
+                <div class="skill-container flex flex-col items-center">
+                    <p class="text-base sm:text-lg mb-4">Node.js</p>
+                    <svg width="120" height="120" class="sm:w-[150px] sm:h-[150px]" viewBox="0 0 150 150">
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#1e293b" stroke-width="10"/>
+                        <circle cx="75" cy="75" r="65" fill="none" stroke="#68a063" stroke-width="10" class="skill-circle" style="--offset: 236;"/>
+                        <text x="75" y="85" fill="#e2e8f0" text-anchor="middle" font-size="24">50%</text>
+                    </svg>
+                    <p class="mt-4 text-center text-sm sm:text-base">Back-end JavaScript performant.</p>
+                </div>
+            </div>
+            <!-- Outils -->
+            <div class="mt-8 sm:mt-12 text-center">
+                <h3 class="text-xl sm:text-2xl font-semibold text-blue-400 mb-4">Outils & Environnements</h3>
+                <p class="text-sm sm:text-lg">VS Code, IntelliJ, Postman, GitHub : Maîtrise à 100% pour le développement, les tests d’API et la gestion de versions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-12 sm:py-16 md:py-20 bg-gray-800 bg-opacity-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-12 sm:mb-16 text-blue-400">Mes Projets</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <div class="project-card bg-gray-900 p-4 sm:p-6 rounded-lg">
+                    <h3 class="text-lg sm:text-xl font-semibold text-blue-400 mb-2">Site Fruits & Légumes</h3>
+                    <p class="text-sm sm:text-base">Site statique en HTML/CSS présentant des informations sur les fruits et légumes.</p>
+                </div>
+                <div class="project-card bg-gray-900 p-4 sm:p-6 rounded-lg">
+                    <h3 class="text-lg sm:text-xl font-semibold text-blue-400 mb-2">Site Touristique Kpalimé</h3>
+                    <p class="text-sm sm:text-base">Site avec cartes de localisation pour promouvoir le tourisme à Kpalimé.</p>
+                </div>
+                <div class="project-card bg-gray-900 p-4 sm:p-6 rounded-lg">
+                    <h3 class="text-lg sm:text-xl font-semibold text-blue-400 mb-2">Gestion d’Hôtel</h3>
+                    <p class="text-sm sm:text-base">Application full-stack (HTML/CSS/JS/PHP/MySQL) pour gérer les réservations.</p>
+                </div>
+                <div class="project-card bg-gray-900 p-4 sm:p-6 rounded-lg">
+                    <h3 class="text-lg sm:text-xl font-semibold text-blue-400 mb-2">Plateforme Prince Empire</h3>
+                    <p class="text-sm sm:text-base">Site pour services d’événements, location, maintenance, etc.</p>
+                </div>
+                <div class="project-card bg-gray-900 p-4 sm:p-6 rounded-lg">
+                    <h3 class="text-lg sm:text-xl font-semibold text-blue-400 mb-2">Projet Fast-Food</h3>
+                    <p class="text-sm sm:text-base">Site avec gestion de commandes, connecté à une base de données.</p>
+                </div>
+                <div class="project-card bg-gray-900 p-4 sm:p-6 rounded-lg">
+                    <h3 class="text-lg sm:text-xl font-semibold text-blue-400 mb-2">Système d’Inscription</h3>
+                    <p class="text-sm sm:text-base">Système sécurisé avec mot de passe haché et tableau de bord utilisateur.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-12 sm:py-16 md:py-20">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            <!-- Coordonnées -->
+            <div class="bg-gray-900 bg-opacity-80 p-6 sm:p-8 rounded-lg">
+                <h2 class="text-2xl sm:text-3xl font-bold text-blue-400 mb-6">Coordonnées</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-envelope mr-3 text-blue-400"></i>
+                        <p class="text-sm sm:text-base">enakutsakokouespoir@gmail.com</p>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-phone mr-3 text-blue-400"></i>
+                        <p class="text-sm sm:text-base">+228 96 45 87 23 / +228 70 16 43 40</p>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-3 text-blue-400"></i>
+                        <p class="text-sm sm:text-base">Lomé, Togo</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Formulaire Envoyez-moi un message -->
+            <div class="bg-gray-900 bg-opacity-80 p-6 sm:p-8 rounded-lg">
+                <h2 class="text-2xl sm:text-3xl font-bold text-blue-400 mb-6">Envoyez-moi un message</h2>
+                <form id="contact-form" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input type="text" id="name" placeholder="Nom" class="glow-input w-full p-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base">
+                        <input type="email" id="email" placeholder="E-mail" class="glow-input w-full p-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base">
+                    </div>
+                    <input type="text" id="subject" placeholder="Sujet" class="glow-input w-full p-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base">
+                    <textarea id="message" placeholder="Message" rows="5" class="glow-input w-full p-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"></textarea>
+                    <button type="button" onclick="sendEmail()" class="glow-button w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base">Envoyer</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-6 sm:py-8 text-center">
+        <p class="text-base sm:text-lg mb-4">Rejoignez-moi sur :</p>
+        <div class="flex justify-center space-x-4 sm:space-x-6">
+            <a href="https://wa.me/+22896458723" target="_blank" class="text-blue-400 hover:text-blue-600 transition-colors">
+                <i class="fab fa-whatsapp fa-lg sm:fa-2x"></i>
+            </a>
+            <a href="https://instagram.com/espo_ir228" target="_blank" class="text-blue-400 hover:text-blue-600 transition-colors">
+                <i class="fab fa-instagram fa-lg sm:fa-2x"></i>
+            </a>
+        </div>
+        <p class="mt-4 text-sm sm:text-base">© 2025 Enakutsa Kokou Espoir. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Animation de texte dactylographié
+        const name = "Enakutsa Kokou Espoir";
+        let i = 0;
+        const typingElement = document.getElementById("typing-name");
+
+        function typeWriter() {
+            if (i < name.length) {
+                typingElement.textContent += name.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+
+        typeWriter();
+
+        // Animation de parallaxe
+        window.addEventListener('scroll', () => {
+            const parallax = document.querySelector('.parallax-section');
+            let scrollPosition = window.pageYOffset;
+            parallax.style.backgroundPositionY = `${scrollPosition * 0.5}px`;
+        });
+
+        // Initialisation d'EmailJS
+        (function(){
+            // Remplace "YOUR_USER_ID" par ton User ID EmailJS (trouvable dans Account > API Keys sur EmailJS)
+            emailjs.init("YOUR_USER_ID");
+        })();
+
+        // Fonction pour envoyer l'email
+        function sendEmail() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            // Validation des champs
+            if (!name || !email || !subject || !message) {
+                alert("Veuillez remplir tous les champs !");
+                return;
+            }
+
+            // Validation de l'email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert("Veuillez entrer une adresse email valide !");
+                return;
+            }
+
+            const templateParams = {
+                from_name: name,
+                from_email: email,
+                subject: subject,
+                message: message,
+                to_email: "enakutsakokouespoir@gmail.com"
+            };
+
+            // Envoie l'email avec EmailJS
+            // Remplace "YOUR_SERVICE_ID" par ton Service ID (trouvable dans Email Services sur EmailJS)
+            // Remplace "YOUR_TEMPLATE_ID" par ton Template ID (trouvable dans Email Templates sur EmailJS)
+            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", templateParams)
+                .then(function(response) {
+                    alert("Message envoyé avec succès ! Merci de m'avoir contacté.");
+                    document.getElementById('contact-form').reset();
+                }, function(error) {
+                    alert("Erreur lors de l'envoi du message : " + JSON.stringify(error));
+                    console.error("Erreur EmailJS:", error);
+                });
+        }
+    </script>
+</body>
+</html>
